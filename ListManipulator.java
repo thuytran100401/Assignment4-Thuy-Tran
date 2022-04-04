@@ -15,26 +15,22 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ListManipulator {
     /**
      * To sort the list in order of ascending or descending
      * 
-     * @param myList    the list need to sort
      * @param ascending order of the list is ascending or descending
      * @return the list in order of ascending or descending
      */
     public ArrayList<Integer> sort(ArrayList<Integer> myList, Boolean ascending) {
-        ArrayList<Integer> list = (ArrayList<Integer>) myList.clone();
         if (ascending) {
-            Collections.sort(list);
+            Collections.sort(myList);
         } else {
-            Collections.sort(list, Collections.reverseOrder());
+            Collections.sort(myList, Collections.reverseOrder());
         }
-        return list;
+        return myList;
     }
 
     /**
@@ -44,22 +40,12 @@ public class ListManipulator {
      * @return the list with the swap between smallest and largest number
      */
     public ArrayList<Integer> swapLargestSmallest(ArrayList<Integer> myList) {
-        ArrayList<Integer> list = (ArrayList<Integer>) myList.clone();
-        int smallestIndex = 0;
-        int largestIndex = 0;
-        for (int i = 0; i <= list.size(); i++) {
-            if (list.get(i) < list.get(largestIndex)) {
-                largestIndex = i;
-            }
-            if (list.get(i) > list.get(smallestIndex)) {
-                smallestIndex = i;
-            }
-        }
-        int temp1 = list.get(largestIndex);
-        int temp2 = list.get(smallestIndex);
-        list.set(largestIndex, temp2);
-        list.set(smallestIndex, temp1);
-        return list;
+        int minElement = 0;
+        int maxElement = 0;
+        minElement = myList.indexOf(Collections.min(myList));
+        maxElement = myList.indexOf(Collections.max(myList));
+        Collections.swap(myList, minElement, maxElement);
+        return myList;
     }
 
     /**
@@ -69,24 +55,13 @@ public class ListManipulator {
      * @param myList the list need to create table
      */
     public void table(ArrayList<Integer> myList) {
-        HashMap<Integer, Integer> a = new HashMap<>();
-        for (int i = 0; i < myList.size(); i++) {
-            if (!a.containsKey(myList.get(i))) {
-                a.put(myList.get(i), 1);
-            } else {
-                a.put(myList.get(i), a.get(myList.get(i)) + 1);
-            }
+        Map<Integer, Integer> myHm = new HashMap<Integer, Integer>();
+        for (Integer key : myList) {
+            Integer count = myHm.get(key);
+            myHm.put(key, (count == null) ? 1 : count + 1);
         }
-        Map<Object, Object> b = a.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-        System.out.println("Values \t|\tNumber Occurs");
-        for (Object key : b.keySet()) {
-            System.out.println(key + "\t|\t" + a.get(key));
+        for (Map.Entry<Integer, Integer> val : myHm.entrySet()) {
+            System.out.println("value: " + val.getKey() + " occurs " + val.getValue() + " times");
         }
     }
 
